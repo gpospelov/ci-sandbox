@@ -74,7 +74,7 @@ jobs:
       id: nsis
       shell: cmake -P {0}
       run: |
-        set(nsis_url "https://sourceforge.net/projects/nsis/files/NSIS%203/3.05/nsis-3.05.zip")
+        set(nsis_url "https://sourceforge.net/projects/nsis/files/NSIS%203/3.04/nsis-3.04.zip")
         file(DOWNLOAD "${nsis_url}" ./nsis.zip SHOW_PROGRESS)
         execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./nsis.zip)
 
@@ -143,7 +143,7 @@ jobs:
       shell: cmd
       run: |
         cd ${{github.workspace}}\BornAgain\build
-        set PATH=${{github.workspace}}\nsis-3.05\bin;%PATH%
+        set PATH=${{github.workspace}}\nsis-3.04;%PATH%
         echo %PATH% 
         cpack -c Release
         dir
