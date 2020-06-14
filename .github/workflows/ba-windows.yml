@@ -148,9 +148,9 @@ jobs:
         cpack -c Release
         dir
 
-    - name: upload nsis log
+    - name: Upload package
       uses: actions/upload-artifact@v2
       if: success()
       with:
-         name: NSISLog
-         path: D:/a/ci-sandbox/ci-sandbox/BornAgain/build/_CPack_Packages/win64/NSIS/NSISOutput.log
+         name: BornAgainWinInstaller
+         path: ./BornAgain/build/BornAgain-*.exe

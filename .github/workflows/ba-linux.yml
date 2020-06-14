@@ -72,7 +72,7 @@ jobs:
       if: success()
       with:
          name: BornAgainTar
-         path: ./build/*.tgz  
+         path: ./build/BornAgain-*.tar.gz  
 
     - name: Testing
       run: |
