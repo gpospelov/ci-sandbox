@@ -75,13 +75,13 @@ jobs:
         # print statistics for ccache
         ccache -s
         
-    - name: Check
+    - name: Testing
       shell: bash
       run: |
         cd $HOME/BornAgain/build
         ctest -LE Fullcheck --output-on-failure
         
-    - name: upload test logs
+    - name: Upload test logs
       uses: actions/upload-artifact@v2
       if: failure()
       with:
@@ -97,7 +97,7 @@ jobs:
         echo $QTDIR
         cpack -V
         
-    - name: upload package
+    - name: Upload package
       uses: actions/upload-artifact@v2
       if: success()
       with:

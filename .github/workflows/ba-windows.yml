@@ -120,7 +120,7 @@ jobs:
         cmake --build . --config Release -j4
         ccache -s
         
-    - name: Run functional tests
+    - name: Testing
       shell: cmd
       run: |
         echo %QTDIR%
