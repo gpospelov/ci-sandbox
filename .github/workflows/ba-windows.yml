@@ -1,34 +1,24 @@
-# This is a basic workflow to help you get started with Actions
-
-name: CI
+name: Windows
 
 env:
   CCACHE_VERSION: 3.7.7
   NINJA_VERSION: 1.10.0
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
   push:
-    branches: [ master ]
-   
+    branches: [ master ]    
   pull_request:
     branches: [ master ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: windows-latest
     strategy:
       max-parallel: 3
       matrix:
         python-version: [3.8]
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
@@ -80,6 +70,14 @@ jobs:
         file(DOWNLOAD "${ninja_url}" ./ninja.zip SHOW_PROGRESS)
         execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./ninja.zip)
 
+    - name: Download Nsis
+      id: nsis
+      shell: cmake -P {0}
+      run: |
+        set(nsis_url "https://sourceforge.net/projects/nsis/files/NSIS%203/3.05/nsis-3.05.zip")
+        file(DOWNLOAD "${nsis_url}" ./nsis.zip SHOW_PROGRESS)
+        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./nsis.zip)
+
     # use ccache for building BornAgain, might save time
     - name: Prepare ccache timestamp
       id: ccache_cache_timestamp
@@ -92,9 +90,9 @@ jobs:
       uses: actions/cache@v1.1.0
       with:
         path: .ccache
-        key: bornagain-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
+        key: ba-windows-ccache-${{ steps.ccache_cache_timestamp.outputs.timestamp }}
         restore-keys: |
-          bornagain-ccache-
+          ba-windows-ccache-
           
     - name: Build BornAgain
       shell: cmd
@@ -111,9 +109,9 @@ jobs:
         set PATH=${{github.workspace}};%OPTLIBS%\lib;%QTDIR%\bin;%PATH%
         cd ${{github.workspace}}
         dir
-        git clone --recursive https://github.com/scgmlz/BornAgain
+        git clone --recursive https://github.com/gpospelov/BornAgain
         cd BornAgain
-        git checkout develop
+        git checkout MacBuild
         mkdir build
         cd build
         cmake -G "Visual Studio 16 2019" -G Ninja -DCMAKE_MAKE_PROGRAM=ninja -DCMAKE_INCLUDE_PATH=%OPTLIBS%/include -DCMAKE_LIBRARY_PATH=%OPTLIBS%/lib -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER="cl.exe" -DCMAKE_CXX_COMPILER="cl.exe" ..
