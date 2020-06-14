@@ -143,8 +143,14 @@ jobs:
       shell: cmd
       run: |
         cd ${{github.workspace}}\BornAgain\build
-        set PATH=${{github.workspace}}\nsis-3.05\bin;${{github.workspace}}\nsis-3.05;%PATH%
+        set PATH=${{github.workspace}}\nsis-3.05\bin;%PATH%
         echo %PATH% 
         cpack -c Release
         dir
 
+    - name: upload nsis log
+      uses: actions/upload-artifact@v2
+      if: success()
+      with:
+         name: NSISLog
+         path: D:/a/ci-sandbox/ci-sandbox/BornAgain/build/_CPack_Packages/win64/NSIS/NSISOutput.log
