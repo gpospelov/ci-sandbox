@@ -138,3 +138,15 @@ jobs:
         cd ${{github.workspace}}\BornAgain\build
         type Testing\Temporary\LastTest.log
 
+    - name: Build package
+      if: success()
+      env:
+        QTDIR: /usr/local/opt/qt
+      shell: bash
+      run: |
+        cd $HOME/BornAgain/build
+        set PATH=${{github.workspace}}\nsis-3.05\bin;${{github.workspace}}\nsis-3.05;%PATH%
+        echo %PATH% 
+        cpack -c Release
+        dir
+        
