@@ -64,10 +64,24 @@ jobs:
         mkdir build && cd build
         cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_C_COMPILER_LAUNCHER=ccache \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache ../
+        make package_source
         make -j4
-        
-    - name: Check
+
+    - name: Upload tarball
+      uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+         name: BornAgainTar
+         path: ./build/*.tgz  
+
+    - name: Testing
       run: |
         cd $HOME/BornAgain/build
         ctest -LE Fullcheck --output-on-failure
         
+    - name: Upload test logs
+      uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+         name: LastTest.log
+         path: ./build/Testing/Temporary/LastTest.log  
